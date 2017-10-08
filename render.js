@@ -1,7 +1,7 @@
 /*
  * PhantomJS Page Rendering script
  *
- * Source: http://phantomjs.org/api/webpage/method/render-buffer.html
+ * Reference: http://phantomjs.org/api/webpage/method/render-buffer.html
  */
 var system = require('system');
 var args = system.args;

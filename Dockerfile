@@ -1,6 +1,7 @@
-FROM debian:stretch
+FROM debian:jessie
 MAINTAINER Ronoaldo JLP <ronoaldo@gmail.com>
 
+RUN echo "deb http://ftp.us.debian.org/debian jessie-backports main contrib non-free" > /etc/apt/sources.list.d/backports.list
 RUN DEBIAN_FRONTEND=non-interactive \
 	sed -e 's/deb.debian.org/ftp.us.debian.org/g' -i /etc/apt/sources.list && \
        	apt-get update &&\

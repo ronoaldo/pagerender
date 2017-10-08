@@ -77,7 +77,7 @@ try {
                 } finally {
                     phantom.exit();
                 }
-            }, 600);
+            }, 1000);
         } catch (e) {
             log('Error rendering page');
             log(e);

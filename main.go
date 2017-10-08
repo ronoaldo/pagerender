@@ -35,6 +35,9 @@ func pageRender(w http.ResponseWriter, r *http.Request) {
 
 	querySelector := r.FormValue("querySelector")
 	clickSelector := r.FormValue("clickSelector")
+	if r.FormValue("click") != "" {
+		clickSelector = r.FormValue("click")
+	}
 	size := r.FormValue("size")
 
 	// Setup command to be executed

@@ -11,25 +11,30 @@ function log() {
 }
 
 if (args.length < 2) {
-    log('Usage: phantomjs render.js url querySelector clickSelector resolution');
+    log('Usage: phantomjs render.js url output querySelector clickSelector resolution');
     phantom.exit();
     exit();
 }
 
 var url = args[1];
-var selector = 'html';
+var output = '/tmp/screenshot.jpg';
 if (args.length >= 3) {
-    selector = args[2];
+    output = args[2];
+}
+var selector = 'html';
+if (args.length >= 4) {
+    selector = args[3];
 }
 var click = "";
-if (args.length >= 4) {
-    click = args[3];
+if (args.length >= 5) {
+    click = args[4];
 }
 var res = '';
-if (args.length >= 5) {
-    res = args[4];
+if (args.length >= 6) {
+    res = args[5];
 }
-log('Rendering ' + url + ', query=' + selector + ', click=' + click + ', res=' + res);
+
+log('Rendering ' + url + ' into ' + output + ', query=' + selector + ', click=' + click + ', res=' + res);
 try {
     var page = require('webpage').create();
     log('Opening ' + url);
@@ -64,7 +69,7 @@ try {
                     };
                 }
                 log('Page rect: ' , JSON.stringify(page.clipRect));
-                page.render('/tmp/screenshot.jpg', {format: 'jpg', quality: 85});
+                page.render(output, {format: 'jpg', quality: 70});
                 log('Page rendered ');
                 } catch(e) {
                     log('Error rendering page');

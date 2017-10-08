@@ -1,9 +1,11 @@
 package main
 
 import (
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"os/exec"
 )
 
@@ -12,6 +14,7 @@ func init() {
 }
 
 func main() {
+	log.Println("Server running at 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
@@ -22,11 +25,21 @@ func pageRender(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	tmpFile, err := ioutil.TempFile("", "screenshot-")
+	if err != nil {
+		http.Error(w, "Unable to create temp file "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+	tmpFile.Close()
+	defer os.Remove(tmpFile.Name())
+
 	querySelector := r.FormValue("querySelector")
 	clickSelector := r.FormValue("clickSelector")
 	size := r.FormValue("size")
 
-	args := []string{"phantomjs", "/var/lib/render.js", url.String(), querySelector, clickSelector, size}
+	// Setup command to be executed
+	args := []string{"phantomjs", "/var/lib/render.js",
+		url.String(), tmpFile.Name(), querySelector, clickSelector, size}
 	cmd := exec.Command("xvfb-run", args...)
 	b, err := cmd.CombinedOutput()
 	if err != nil {
@@ -36,5 +49,6 @@ func pageRender(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(string(b))
 
-	http.ServeFile(w, r, "/tmp/screenshot.jpg")
+	log.Println("Serving image: ", tmpFile.Name())
+	http.ServeFile(w, r, tmpFile.Name())
 }

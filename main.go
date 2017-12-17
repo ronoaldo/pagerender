@@ -11,11 +11,17 @@ import (
 
 func init() {
 	http.HandleFunc("/pageRender", pageRender)
+	http.HandleFunc("/", index)
 }
 
 func main() {
 	log.Println("Server running at 8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func index(w http.ResponseWriter, r *http.Request) {
+	log.Println("Serving index.html")
+	http.ServeFile(w, r, "index.html")
 }
 
 func pageRender(w http.ResponseWriter, r *http.Request) {

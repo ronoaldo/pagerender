@@ -13,5 +13,9 @@ ENV VERSION GIT_HASH
 ADD render.js  /var/lib/
 ADD pagerender /usr/bin/
 
+RUN mkdir /var/www
+ADD index.html /var/www
+WORKDIR /var/www
+
 EXPOSE 8080
 ENTRYPOINT pagerender
